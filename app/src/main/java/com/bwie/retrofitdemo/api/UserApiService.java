@@ -4,6 +4,7 @@ import com.bwie.retrofitdemo.entity.UserEntity;
 
 import java.util.HashMap;
 
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -27,7 +28,7 @@ public interface UserApiService {
 //    Call<UserEntity> login(@Url String url, @Field("phone") String p, @Field("pwd") String pass);
     @POST//请求方式
      @FormUrlEncoded
-    Call<UserEntity> login(@Url String url, @FieldMap HashMap<String, String> params);
+    Observable<UserEntity> login(@Url String url, @FieldMap HashMap<String, String> params);
 
     @GET
 //请求方式

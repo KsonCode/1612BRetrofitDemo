@@ -16,12 +16,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
@@ -48,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         Retrofit retrofit = new Retrofit.Builder()
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())//添加gson解析器
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())//添加请求回调适配器
                 .baseUrl(Api.BASE_URL)//
                 .build();
 
@@ -77,21 +82,36 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-        userApiService.login(Api.LOGIN_URL,parms).enqueue(new Callback<UserEntity>() {
-            @Override
-            public void onResponse(Call<UserEntity> call, Response<UserEntity> response) {
-                UserEntity userEntity = response.body();
-                Toast.makeText(MainActivity.this,userEntity.result.phone,Toast.LENGTH_SHORT).show();
+//        userApiService.login(Api.LOGIN_URL,parms).execute();
 
+//        userApiService.login(Api.LOGIN_URL,parms).enqueue(new Callback<UserEntity>() {
+//            @Override
+//            public void onResponse(Call<UserEntity> call, Response<UserEntity> response) {
+//                UserEntity userEntity = response.body();
+//                Toast.makeText(MainActivity.this,userEntity.result.phone,Toast.LENGTH_SHORT).show();
+//
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<UserEntity> call, Throwable t) {
+//
+//                Toast.makeText(MainActivity.this, "t:"+t, Toast.LENGTH_SHORT).show();
+//
+//
+//
+//            }
+//        });
+
+        userApiService.login(Api.LOGIN_URL,parms).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<UserEntity>() {
+            @Override
+            public void accept(UserEntity userEntity) throws Exception {
+                Toast.makeText(MainActivity.this, ""+userEntity.result.phone, Toast.LENGTH_SHORT).show();
 
             }
-
+        }, new Consumer<Throwable>() {
             @Override
-            public void onFailure(Call<UserEntity> call, Throwable t) {
-
-                Toast.makeText(MainActivity.this, "t:"+t, Toast.LENGTH_SHORT).show();
-
-
+            public void accept(Throwable throwable) throws Exception {
 
             }
         });
@@ -106,5 +126,8 @@ public class MainActivity extends AppCompatActivity {
             bind.unbind();
             bind = null;
         }
+
+
     }
+
 }
