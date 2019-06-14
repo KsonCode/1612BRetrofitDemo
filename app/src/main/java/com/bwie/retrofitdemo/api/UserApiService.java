@@ -4,6 +4,7 @@ import com.bwie.retrofitdemo.entity.UserEntity;
 
 import java.util.HashMap;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -32,7 +33,7 @@ public interface UserApiService {
 
     @GET
 //请求方式
-    Call<UserEntity> getUserInfo(@Url String url,@Header("userId") String uid, @Header("sessionId") String sessionid);
+    Flowable<UserEntity> getUserInfo(@Url String url, @Header("userId") String uid, @Header("sessionId") String sessionid);
 
     @GET
 //请求方式

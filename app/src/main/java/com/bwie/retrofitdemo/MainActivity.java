@@ -1,5 +1,6 @@
 package com.bwie.retrofitdemo;
 
+import android.annotation.SuppressLint;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("WrongConstant")
     @OnClick(R.id.btn_login)
     public void login(View v){
 
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         HashMap<String,String> parms = new HashMap<>();
         parms.put("phone","18612991023");
         parms.put("pwd","111111");
+//        Toast.makeText(this, "", 6000).show();
 //        userApiService.login(Api.LOGIN_URL,"18612991023", "111111").enqueue(new Callback<UserEntity>() {
 //            @Override
 //            public void onResponse(Call<UserEntity> call, Response<UserEntity> response) {
